@@ -2,6 +2,25 @@
 #include <iostream>
 #include <string>
 
+long long findMax(std::string &line, int n) {
+	int curLargestIndex = 0;
+	char curLargest = line[0];
+	long long out = 0;
+	for (int i = 0; i < n; i++) {
+		for (int j = curLargestIndex; j <= line.size() - n + i; j++) {
+			if (line[j] > curLargest) {
+				curLargest = line[j];
+				curLargestIndex = j;
+			}
+		}
+		out = out * 10 + (curLargest - '0');
+
+		curLargestIndex++;
+		curLargest = line[curLargestIndex];
+	}
+	return out;
+}
+
 int main() {
 	std::ifstream file("./inputs/day3.txt");
 
@@ -14,39 +33,8 @@ int main() {
 	int sum = 0;
 
 	while (std::getline(file, line)) {
-		std::cout << line << ": ";
-
-		int out;
-
-		char largest = line[0];
-		int largestIndex = 0;
-
-		for (int i = 1; i < line.size(); i++) {
-			if (line[i] > largest) {
-				largest = line[i];
-				largestIndex = i;
-			}
-		}
-
-		if (largestIndex == line.size() - 1) {
-			char secondLargest = line[0];
-			for (int i = 1; i < line.size() - 1; i++) {
-				if (line[i] > secondLargest) {
-					secondLargest = line[i];
-				}
-			}
-			out = (secondLargest - '0') * 10 + (largest - '0');
-		} else {
-			char secondLargest = line[largestIndex + 1];
-			for (int i = largestIndex + 2; i < line.size(); i++) {
-				if (line[i] > secondLargest) {
-					secondLargest = line[i];
-				}
-			}
-			out = (largest - '0') * 10 + (secondLargest - '0');
-		}
-		std::cout << out << "\n";
-
+		int out = findMax(line, 2);
+		std::cout << line << ": " << out << "\n";
 		sum += out;
 	}
 
